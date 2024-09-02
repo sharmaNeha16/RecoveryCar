@@ -1,0 +1,249 @@
+-- Create database
+DROP DATABASE IF EXISTS RecoveryCar;
+CREATE DATABASE RecoveryCar;
+show databases;
+
+USE RecoveryCar;
+
+-- Task 1 Create Tables
+-- Create table tbl_members
+CREATE TABLE tbl_members(
+-- Create the attributes(column/field name)
+-- Column/Field DataType Constraints
+Member_ID INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+First_Name VARCHAR(20) NOT NULL,
+Last_Name VARCHAR(20) NOT NULL,
+Member_Location VARCHAR(20) NOT NULL,
+Member_Age INT NOT NULL
+);
+-- drop table tbl_songs;
+
+-- Create table tbl_vehicle
+
+CREATE TABLE tbl_vehicle(
+Vehicle_Registration VARCHAR(10) NOT NULL PRIMARY KEY,
+Vehicle_Make VARCHAR(10) NOT NULL,
+Vehicle_Model VARCHAR(10) NOT NULL,
+Member_ID INT
+);
+
+-- 	CREATE TABLE tbl_engineer
+CREATE TABLE tbl_engineer(
+Engineer_ID INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+First_Name VARCHAR(20) NOT NULL,
+Last_Name VARCHAR(20) NOT NULL
+);
+
+-- Create Table tbl_breakdown
+-- drop table tbl_breakdown;
+CREATE TABLE tbl_breakdown(
+Breakdown_ID INT NOT NULL PRIMARY KEY,
+Vehicle_Registration VARCHAR(10),
+Engineer_ID INT,
+Breakdown_Date DATE,
+Breakdown_Time DATETIME,
+Breakdown_Location varchar(20)
+);
+
+-- Using the ALTER command, set the foreign keys.
+
+ALTER TABLE tbl_vehicle ADD FOREIGN KEY (Member_ID) REFERENCES tbl_members(Member_ID);
+ALTER TABLE tbl_breakdown ADD FOREIGN KEY (Engineer_ID) REFERENCES tbl_engineer(Engineer_ID);
+ALTER TABLE tbl_breakdown ADD FOREIGN KEY (Vehicle_Registration) REFERENCES tbl_vehicle(Vehicle_Registration);
+
+--   Task 2 Insert Data
+
+
+INSERT INTO tbl_members (Member_ID, First_Name, Last_Name, Member_Location, Member_Age)
+VALUES
+    (null, 'John', 'Doe', 'Bromley', 35),
+    (null, 'Jane', 'Smith', 'Manchaster', 29),
+    (null, 'Matthew', 'Taylor', 'Hammersmith', 31),
+    (null, 'Emily', 'Brown', 'Camden', 51),
+    (null, 'Sarah', 'Wilson', 'Southwark', 25),
+	(null, 'Mary', 'Jane', 'Notting Hill', 18);
+
+
+-- Insert records into Vehicle Table
+-- truncate table tbl_vehicle;
+INSERT INTO tbl_vehicle (Vehicle_Registration,Vehicle_Make, Vehicle_Model, Member_ID)
+VALUES
+('AB24 CDE', 'Toyota', 'Camry', 1),
+('JFY3 GSD', 'Toyota', 'Corolla', 2),
+('XYZ1 LOK', 'Honda', 'Electric', 3),
+('XYZ2 POL', 'Honda', 'CR-V', 4),
+
+('AB25 CDE', 'Honda', 'Hybrid', 1),
+('AB68 KUY', 'Honda', 'CR-V', 2),
+('abds MKJ', 'Honda', 'Civic', 4),
+('ABY9 GBF', 'Honda', 'CR-V', 5),
+('abdd dfe', 'Honda', 'Civic',null ),
+('dfer 6gf', 'Honda', 'CR-V',null ),
+('ABXX CDE', 'Honda', 'Civic',null ),
+('JFFF GSD', 'Tesla', 'CR-V',null ),
+('ABBB CDE', 'Mitsubisi', 'Civic',null );
+
+-- Insert records into Engineer table
+INSERT INTO tbl_engineer (Engineer_ID, First_Name, Last_Name)
+VALUES
+(1, 'Steve', 'John'),
+(2, 'Dave', 'Kelly'),
+(3, 'Chris', 'Stock'),
+(4, 'Wade', 'Wilson');
+
+-- Insert records into Breakdown table
+-- truncate table tbl_breakdown;
+
+INSERT INTO tbl_breakdown (Breakdown_ID, Vehicle_Registration, Engineer_ID, Breakdown_Date, Breakdown_Time, Breakdown_Location)
+VALUES
+(101, 'AB24 CDE', 3, '2023-01-01','2023-01-01 17:12:22', 'London' ),
+(102, 'JFY3 GSD', 2, '2023-01-09','2023-01-09 15:12:22', 'Manchester' ),
+
+(103,'XYZ1 LOK', 1, '2023-02-02','2023-02-02 12:12:22', 'Coventry' ),
+(104,'XYZ2 POL' , 2, '2023-03-03','2023-03-03 09:12:22', 'Colchester' ),
+(105,'AB25 CDE', 3, '2023-01-06','2023-01-06 10:12:22', 'Birmingham' ),
+
+(106, 'AB68 KUY',1, '2023-06-05','2023-06-05 17:12:22', 'Ipswich' ),
+(107, 'abds MKJ', 2, '2024-01-09','2024-01-09 17:12:22', 'Cambridge' ),
+(108, 'ABY9 GBF', 3, '2024-01-09','2024-01-09 17:12:22', 'Coventry' ),
+(109, 'AB25 CDE', 2,  '2024-01-09','2024-01-09 17:12:22', 'London' ),
+(110, 'XYZ2 POL' , 1, '2024-01-09','2024-01-09 17:12:22', 'Colchester' ),
+(111, 'JFY3 GSD', 3, '2024-01-09','2024-01-09 17:12:22', 'London' ),
+(112, 'AB24 CDE', 2, '2024-01-09','2024-01-09 17:12:22', 'Manchester'),
+(113, 'ABXX CDE', 2,  '2023-05-09','2023-05-09 12:43:22', 'Birmingham' ),
+(114, 'JFFF GSD', 3,  '2023-07-05','2023-07-05 19:33:22', 'Rochester' ),
+(115, 'ABBB CDE', 2,  '2023-02-02','2023-02-02 14:12:22', 'Blackpool' );
+
+
+-- Task 3
+-- 3.1 Retrieve the first 3 members from the Member table
+SELECT * FROM tbl_members ORDER BY Member_ID LIMIT 3;
+
+-- 3.2
+-- Retrieve 3 members, skipping the first 2.
+SELECT Member_ID, First_Name, Last_Name, Member_Location, Member_Age FROM tbl_members 
+ORDER BY 
+Member_ID
+LIMIT 3 OFFSET 2;
+
+-- Task 3.3
+-- Retrieve all vehicles whose Vehicle_Make starts with 'T'. 
+select * from tbl_vehicle 
+where Vehicle_Make like 'T%';
+
+-- Task 3.4
+-- Retrieve all breakdowns that occurred between '2023-01-01' and '2023-06-30'.
+select * from tbl_breakdown
+where Breakdown_Date between '2023-01-01' AND '2023-06-30'
+order by Breakdown_ID;
+
+-- Task 3.5
+-- Retrieve details of vehicles with three Vehicle_Registration of your own choice in the list –  for example vehicles with registration 'ABC123', 'XYZ789', 'ANZ789'.
+select * from tbl_vehicle
+where Vehicle_Registration IN ('AB24 CDE', 'XYZ2 POL', 'AB68 KUY');
+
+-- Task 3.6
+-- Retrieve the number of breakdowns each vehicle has had.
+select COUNT(Vehicle_Registration) AS 'Number of breakdowns' , Vehicle_Registration from tbl_breakdown
+group by Vehicle_Registration;
+
+-- Task 3.7
+-- Retrieve all members sorted by Member_Age in descending order
+select * from tbl_members
+order by Member_Age desc;
+
+-- Task 3.8
+-- Retrieve all vehicles that are either 'Toyota' make or 'Honda' make, and the model starts with 'C’
+select * from tbl_vehicle
+where Vehicle_Make IN ('Toyota','Honda') AND Vehicle_Model like 'C%';
+
+-- Task 3.9
+-- Retrieve all engineers who do not have any breakdowns assigned (use LEFT JOIN and IS NULL)
+select  CONCAT(First_Name, ' ', Last_name) AS Name from tbl_engineer 
+left join tbl_breakdown  ON tbl_engineer.Engineer_ID = tbl_breakdown.Engineer_ID
+where Breakdown_ID IS NULL
+order by Breakdown_ID;
+
+-- Task 3.10
+-- Retrieve all members aged between 25 and 40
+select * from tbl_members
+where Member_Age BETWEEN 25 AND 40
+order by Member_ID;
+
+-- Task 3.11 
+-- Retrieve all members whose First_Name starts with 'J' and Last_Name contains 'son'
+
+select * from tbl_members
+where First_Name like 'J%' OR Last_Name like '%son%'
+order by Member_ID;
+
+-- Task 3.12
+-- Retrieve the top 5 oldest member
+select * from tbl_members
+order by Member_Age DESC
+limit 5;
+
+-- Task 3.13
+-- Retrieve all vehicle registrations in uppercase.
+select upper(vehicle_Registration) from tbl_vehicle;
+
+
+-- Task 3.14
+-- Retrieve the details of all members along with the vehicles they own.
+select * from tbl_members inner join tbl_vehicle 
+on tbl_members.Member_ID = tbl_vehicle.Member_ID
+group by vehicle_Registration;
+
+-- Task 3.15
+-- Retrieve all members and any associated vehicles, including members who do not own any vehicles
+select tbl_members.* from tbl_members left join tbl_vehicle 
+on tbl_members.Member_ID = tbl_vehicle.Member_ID
+where tbl_vehicle.Member_ID is null
+;
+
+-- Task 3.16
+-- Retrieve all vehicles and the associated members, including vehicles that are not owned by any members
+select * from tbl_vehicle left join tbl_members
+on tbl_vehicle.Member_ID = tbl_members.Member_ID;
+
+-- Task 3.17
+-- Retrieve the number of breakdowns each member has had
+select COUNT(*), tbl_members.Member_ID, tbl_members.First_Name, tbl_members.Last_Name from tbl_breakdown inner join 
+tbl_vehicle on tbl_breakdown.Vehicle_Registration = tbl_vehicle.Vehicle_Registration
+inner join tbl_members on tbl_members.Member_ID = tbl_vehicle.Member_ID
+group by tbl_members.Member_ID, tbl_members.First_Name, tbl_members.Last_Name;
+
+
+
+-- Task 3.18
+-- Retrieve all breakdowns along with member first name and last name that occurred for vehicles owned by members aged over 50
+
+select tbl_breakdown.*, tbl_members.First_Name,tbl_members.Last_Name  from tbl_breakdown left join 
+tbl_vehicle on tbl_breakdown.Vehicle_Registration = tbl_vehicle.Vehicle_Registration
+inner join tbl_members on tbl_members.Member_ID = tbl_vehicle.Member_ID
+ where Member_Age > 50;
+ 
+-- Task 4
+-- Functions
+-- 1 Avg The SQL AVG() Function
+-- The AVG() function returns the average value of a numeric column. 
+select  avg(Member_Age) from tbl_members;
+-- The MIN() function returns the smallest value of the selected column.
+-- the min age of members
+select  min(Member_Age) from tbl_members;
+-- The MAX() function returns the largest value of the selected column.
+-- the max age of members
+select  max(Member_Age)  from tbl_members;
+-- The SUM() function returns the total sum of a numeric column.
+select  sum(Member_Age)  from tbl_members;
+    
+    
+-- Task 6: Update and Delete Records
+-- Update 3 records of your own choice from the Engineer table.
+update tbl_engineer set First_Name = 'Davis' where Engineer_ID = 3;
+update tbl_engineer set Last_Name = 'Smith' where Engineer_ID = 2;
+update tbl_engineer set First_Name = 'Trevor' where Engineer_ID = 1;
+
+
+-- Delete 2 records or your own choice from the breakdown table.
+delete from tbl_breakdown where Breakdown_ID in (113,114);
